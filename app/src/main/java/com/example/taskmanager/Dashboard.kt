@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.asIntState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,18 +42,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import java.sql.Date
 
 @Composable
 fun DashboardScreen(navController: NavHostController, userViewModel: UserViewModel, taskViewModel: TaskViewModel){
-//fun DashboardScreen(){
     val email = userViewModel.signedInEmail.collectAsState().value
     val tasks by taskViewModel.tasks.collectAsState()
+    val totalTasks by taskViewModel.totalTasks.collectAsState()
+    val completedTasks by taskViewModel.completedTasks.collectAsState()
+    LaunchedEffect(email) {
+        if (!email.isNullOrEmpty()) {
+            email.let { taskViewModel.fetchTaskCounts(it) }
+        }
+    }
+
 
     LaunchedEffect(email) {
         if (!email.isNullOrEmpty()) {
-            email?.let { taskViewModel.loadTasks(it) }
+            email.let { taskViewModel.loadTasks(it) }
         }
     }
     Column (modifier = Modifier
@@ -84,11 +93,9 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                 .padding(10.dp)
                 .align(Alignment.CenterHorizontally)
                 .height(185.dp)
-            //.background(color = Color.LightGray)
         ){
             Button(
                 onClick = {navController.navigate("profile/{email}")},
-                //onClick = {},
                 shape = RoundedCornerShape(40.dp),
                 colors = ButtonColors(containerColor = Color.White, contentColor = Color.Black, disabledContainerColor = Color.White, disabledContentColor = Color.DarkGray),
                 modifier = Modifier
@@ -139,13 +146,10 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                     )
             ) {
                 Column(
-//                    verticalArrangement = Arrangement.Center,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
                         .fillMaxSize()
                 ) {
-                    var completedTasks by remember { mutableStateOf(0) }
-                    var totalTasksNum by remember{ mutableStateOf(0) }
                     Text(
                         text = "Progress",
                         color = Color(0xFFFF8700),
@@ -157,7 +161,7 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
 
                         )
                     Text(
-                        text = completedTasks.toString() + " / " +totalTasksNum.toString(),
+                        text = "$completedTasks / $totalTasks",
                         color = Color.DarkGray,
                         modifier = Modifier
                             .padding(top = 20.dp)
@@ -169,32 +173,6 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                 }
             }
         }
-//        LazyColumn(
-//            modifier = Modifier
-//                .weight(1f)
-//                .padding(16.dp)
-//        ) {
-//            items(25) { index ->
-//                Row(
-//                    verticalAlignment = Alignment.CenterVertically,
-//                ){
-//                    Column(){
-//                        Text("Task $index: ", style = MaterialTheme.typography.titleMedium)
-//                        Text("make a business call")
-//                    }
-//                    Image(
-//                        painter = painterResource(R.drawable.baseline_check_box_24),
-//                        contentDescription = "Checkbox",
-//                        modifier = Modifier.align(Alignment.CenterVertically)
-//                            .padding(start = 25.dp)
-//                            .shadow(elevation = 1.dp)
-////                            .border(width = 1.dp, color = Color.Black, shape = RectangleShape)
-//                    )
-//                    Text("27.12.2025", modifier = Modifier.padding(start=25.dp))
-//                }
-//                Divider()
-//            }
-//        }
         if (tasks.isEmpty()) {
             Text("No tasks found", style = MaterialTheme.typography.bodyMedium)
         } else {

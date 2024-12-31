@@ -1,5 +1,7 @@
 package com.example.taskmanager
 
+import kotlinx.coroutines.flow.Flow
+
 class TaskRepository(private val taskDao: TaskDAO) {
 
     suspend fun insertTask(task: Task): Long {
@@ -20,5 +22,13 @@ class TaskRepository(private val taskDao: TaskDAO) {
 
     suspend fun updateTask(task: Task) {
         taskDao.updateTask(task)
+    }
+
+    suspend fun getTotalTasksCount(email:String):Flow<Int>{
+        return taskDao.getTotalTasksCount(email)
+    }
+
+    suspend fun getCompletedTasksCount(email:String):Flow<Int>{
+        return taskDao.getCompletedTasksCount(email)
     }
 }

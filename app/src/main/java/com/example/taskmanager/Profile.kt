@@ -41,10 +41,16 @@ fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel
     var age by remember{ mutableStateOf(0) }
     var phoneNumber by remember { mutableStateOf("") }
     LaunchedEffect(email) {
-        name = userViewModel.getName(email.toString()) ?: ""
+        name = userViewModel.getName(email.toString())?: ""
         lastname = userViewModel.getLastname(email.toString()) ?: ""
         age = userViewModel.getAge(email.toString()) ?: 0
         phoneNumber = userViewModel.getPhoneNumber(email.toString()) ?: ""
+        name = name.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase() else it.toString()
+        }
+        lastname = lastname.replaceFirstChar {
+            if (it.isLowerCase()) it.titlecase() else it.toString()
+        }
     }
     Box(modifier = Modifier
         .height(250.dp)

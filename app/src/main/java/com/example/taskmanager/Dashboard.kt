@@ -1,5 +1,7 @@
 package com.example.taskmanager
 
+import android.graphics.drawable.Icon
+import android.widget.ImageButton
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -22,8 +24,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ProgressIndicatorDefaults
@@ -168,7 +174,7 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                     val progress = if (totalTasks > 0) completedTasks / totalTasks.toFloat() else 0f
                     val animatedProgress by animateFloatAsState(
                         targetValue = progress,
-                        animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing) // Smooth animation
+                        animationSpec = tween(durationMillis = 1000, easing = FastOutSlowInEasing)
                     )
                     val progressColor = when {
                         animatedProgress == 1f -> Color(0xFF69F0AE)
@@ -202,70 +208,134 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
         if (tasks.isEmpty()) {
             Text("No tasks found", style = MaterialTheme.typography.bodyMedium)
         } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
+            TaskList(tasks, taskViewModel, userViewModel)
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            FloatingActionButton(
+                onClick={navController.navigate("taskAdder/$email")},
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(20.dp),
+                containerColor = Color(0xFFe74c3c),
+                contentColor = Color.White,
             ) {
-                itemsIndexed(tasks) { index, task ->
-                    TaskItem(task = task, index = index + 1) { updatedTask ->
-                        taskViewModel.updateTask(updatedTask) // Call to update the task in the database
-                    }
+                Row{
+                    Image(
+                        painter = painterResource(R.drawable.baseline_add_circle_outline_24),
+                        contentDescription = "add button",
+                        modifier = Modifier.size(30.dp)
+                    )
+                    Text("Add a Task", fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.align(Alignment.CenterVertically).padding(start=5.dp))
                 }
             }
         }
-        Button(
-            onClick={navController.navigate("taskAdder/$email")},
-            colors = ButtonColors(Color(0xFFe74c3c), Color.White, Color(0xFFe74c3c), Color.White),
-            modifier = Modifier.padding(20.dp)
-        ){
-            Row{
-                Image(
-                    painter = painterResource(R.drawable.baseline_add_circle_outline_24),
-                    contentDescription = "add button",
-                    modifier = Modifier.size(30.dp)
-                )
-                Text("Add a Task", fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.align(Alignment.CenterVertically).padding(start=5.dp))
+//        Button(
+//            onClick={navController.navigate("taskAdder/$email")},
+//            colors = ButtonColors(Color(0xFFe74c3c), Color.White, Color(0xFFe74c3c), Color.White),
+//            modifier = Modifier.padding(20.dp)
+//        ){
+//            Row{
+//                Image(
+//                    painter = painterResource(R.drawable.baseline_add_circle_outline_24),
+//                    contentDescription = "add button",
+//                    modifier = Modifier.size(30.dp)
+//                )
+//                Text("Add a Task", fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.align(Alignment.CenterVertically).padding(start=5.dp))
+//            }
+//        }
+    }
+}
+
+@Composable
+fun TaskList(tasks: List<Task>, taskViewModel: TaskViewModel, userViewModel: UserViewModel) {
+    val email = userViewModel.signedInEmail.collectAsState().value
+    Column(modifier = Modifier.fillMaxWidth().padding( 10.dp)) {
+        Row(modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)) {
+            Text(
+                text = "N",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(end = 24.dp),
+            )
+            Image(
+                painter = painterResource(R.drawable.baseline_delete_24),
+                contentDescription = "delete",
+                modifier = Modifier.padding(end = 50.dp)
+            )
+            Text(
+                text = "Description",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(end = 60.dp),
+            )
+            Text(
+                text = "Status",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(end=30.dp),
+            )
+            Text(
+                text = "Date",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.weight(0.2f),
+            )
+        }
+        Divider()
+
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            itemsIndexed(tasks) { index, task ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = (index + 1).toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(end = 2.dp),
+                    )
+                    IconButton(
+                        onClick = {
+                            task.taskId?.let { email?.let { it1 ->
+                            taskViewModel.deleteTask(it,
+                                it1
+                            )
+                        }
+                            }
+                                  },
+                        modifier = Modifier.size(25.dp).weight(0.1f),
+                    ){
+                        Icon(
+                            painter = painterResource(R.drawable.baseline_delete_forever_24),
+                            contentDescription = "delete",
+                            modifier = Modifier.size(24.dp).weight(0.1f)
+                        )
+                    }
+                    Text(
+                        text = task.description ?: "No description",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(0.2f),
+                    )
+                    Checkbox(
+                        checked = task.status ?: false,
+                        onCheckedChange = { checked ->
+                            val updatedTask = task.copy(status = checked)
+                            taskViewModel.updateTask(updatedTask)
+                        },
+                        modifier = Modifier.weight(0.1f)
+                    )
+                    Text(
+                        text = task.dueDate ?: "No due date",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(0.1f),
+                    )
+                }
+                Divider()
             }
         }
     }
 }
 
-@Composable
-fun TaskItem(task: Task, index: Int, onStatusChange:(Task)->Unit) {
-    var isChecked by remember { mutableStateOf(task.status ?: false) }
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-    ) {
-        Text(
-            text = "ID: ${task.taskId ?: "N/A"}",
-            modifier = Modifier.align(Alignment.CenterVertically).padding(end = 10.dp),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Column (
-            modifier = Modifier.align(Alignment.CenterVertically),
-        ){
-            Text(
-                text = "Task: $index",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(start = 5.dp, end = 10.dp),
-            )
-            Text(
-                text = "${task.description ?: "No description"}",
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(start = 5.dp,end = 10.dp),
-            )
-        }
-        Checkbox(
-            checked = isChecked,
-            onCheckedChange = { checked ->
-                isChecked = checked
-                val updatedTask = task.copy(status = checked)
-                onStatusChange(updatedTask)
-            }
-        )
-        Text(
-            text = "${task.dueDate ?: "No due date"}",
-            modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp),
-        )
-    }
-}
+

@@ -20,7 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 
@@ -71,6 +73,7 @@ fun TaskAdderScreen(
             value = dueDate,
             onValueChange = { dueDate = it },
             label = { Text("Due Date") },
+            placeholder = {Text("DD-MM-YYYY", color = Color.Gray)},
             modifier = Modifier.fillMaxWidth(),
             singleLine = true
         )

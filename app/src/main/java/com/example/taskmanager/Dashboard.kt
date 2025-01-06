@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -59,7 +60,7 @@ import androidx.navigation.NavHostController
 import java.sql.Date
 
 @Composable
-fun DashboardScreen(navController: NavHostController, userViewModel: UserViewModel, taskViewModel: TaskViewModel){
+fun DashboardScreen(navController: NavHostController, userViewModel: UserViewModel, taskViewModel: TaskViewModel) {
     val email = userViewModel.signedInEmail.collectAsState().value
     val tasks by taskViewModel.tasks.collectAsState()
     val totalTasks by taskViewModel.totalTasks.collectAsState()
@@ -76,8 +77,9 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
             email.let { taskViewModel.loadTasks(it) }
         }
     }
-    Column (modifier = Modifier
-        .fillMaxSize(),
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     )
     {
@@ -89,10 +91,10 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                 .align(Alignment.CenterHorizontally),
             contentAlignment = Alignment.Center,
 
-            ){
+            ) {
             Text(
                 modifier = Modifier
-                    .padding(top=35.dp),
+                    .padding(top = 35.dp),
                 text = "Dashboard",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold,
@@ -105,11 +107,16 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                 .padding(10.dp)
                 .align(Alignment.CenterHorizontally)
                 .height(185.dp)
-        ){
+        ) {
             Button(
-                onClick = {navController.navigate("profile/{email}")},
+                onClick = { navController.navigate("profile/{email}") },
                 shape = RoundedCornerShape(40.dp),
-                colors = ButtonColors(containerColor = Color.White, contentColor = Color.Black, disabledContainerColor = Color.White, disabledContentColor = Color.DarkGray),
+                colors = ButtonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black,
+                    disabledContainerColor = Color.White,
+                    disabledContentColor = Color.DarkGray
+                ),
                 modifier = Modifier
                     .padding(5.dp)
                     .fillMaxHeight()
@@ -145,7 +152,12 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
             Button(
                 onClick = {},
                 shape = RoundedCornerShape(40.dp),
-                colors = ButtonColors(containerColor = Color.White, contentColor = Color.Black, disabledContainerColor = Color.White, disabledContentColor = Color.DarkGray),
+                colors = ButtonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black,
+                    disabledContainerColor = Color.White,
+                    disabledContentColor = Color.DarkGray
+                ),
                 modifier = Modifier
                     .padding(5.dp)
                     .fillMaxHeight()
@@ -170,7 +182,7 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                             .align(Alignment.CenterHorizontally),
                         fontSize = 25.sp,
                         fontWeight = FontWeight.Bold,
-                        )
+                    )
                     val progress = if (totalTasks > 0) completedTasks / totalTasks.toFloat() else 0f
                     val animatedProgress by animateFloatAsState(
                         targetValue = progress,
@@ -208,52 +220,45 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
         if (tasks.isEmpty()) {
             Text("No tasks found", style = MaterialTheme.typography.bodyMedium)
         } else {
-            TaskList(tasks, taskViewModel, userViewModel)
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp)
-        ) {
-            FloatingActionButton(
-                onClick={navController.navigate("taskAdder/$email")},
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(20.dp),
-                containerColor = Color(0xFFe74c3c),
-                contentColor = Color.White,
-            ) {
-                Row{
-                    Image(
-                        painter = painterResource(R.drawable.baseline_add_circle_outline_24),
-                        contentDescription = "add button",
-                        modifier = Modifier.size(30.dp)
-                    )
-                    Text("Add a Task", fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.align(Alignment.CenterVertically).padding(start=5.dp))
-                }
+            Column {
+                TaskList(tasks, taskViewModel, userViewModel)
             }
+
         }
-//        Button(
-//            onClick={navController.navigate("taskAdder/$email")},
-//            colors = ButtonColors(Color(0xFFe74c3c), Color.White, Color(0xFFe74c3c), Color.White),
-//            modifier = Modifier.padding(20.dp)
-//        ){
-//            Row{
-//                Image(
-//                    painter = painterResource(R.drawable.baseline_add_circle_outline_24),
-//                    contentDescription = "add button",
-//                    modifier = Modifier.size(30.dp)
-//                )
-//                Text("Add a Task", fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.align(Alignment.CenterVertically).padding(start=5.dp))
-//            }
-//        }
+    }
+    Box(
+        modifier = Modifier
+            .padding(top = 845.dp)
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .background(Color.White),
+
+    ){}
+    Button(
+        onClick = { navController.navigate("taskAdder/$email") },
+        colors = ButtonColors(Color(0xFFe74c3c), Color.White, Color(0xFFe74c3c), Color.White),
+        modifier = Modifier.padding(20.dp).padding(top = 800.dp, start = 105.dp),
+    ) {
+        Row {
+            Image(
+                painter = painterResource(R.drawable.baseline_add_circle_outline_24),
+                contentDescription = "add button",
+                modifier = Modifier.size(30.dp)
+            )
+            Text(
+                "Add a Task",
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                modifier = Modifier.align(Alignment.CenterVertically).padding(start = 5.dp)
+            )
+        }
     }
 }
 
 @Composable
 fun TaskList(tasks: List<Task>, taskViewModel: TaskViewModel, userViewModel: UserViewModel) {
     val email = userViewModel.signedInEmail.collectAsState().value
-    Column(modifier = Modifier.fillMaxWidth().padding( 10.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding( 10.dp).padding(bottom = 55.dp)) {
         Row(modifier = Modifier.fillMaxWidth().padding(bottom = 4.dp)) {
             Text(
                 text = "N",

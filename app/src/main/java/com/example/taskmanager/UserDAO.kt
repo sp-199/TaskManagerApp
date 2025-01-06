@@ -32,14 +32,14 @@ interface UserDAO {
     suspend fun getPasswordByEmail(email: String): String?
 
     @Query("UPDATE users SET name = :name WHERE email = :email")
-    suspend fun updateName(email: String, name: String)
+    suspend fun updateName(name:String, email: String)
 
-    @Query("UPDATE users SET lastname = :lastname WHERE email = :email")
-    suspend fun updateLastname(email: String, lastname: String)
+    @Query("UPDATE users SET lastName = :lastname WHERE email = :email")
+    suspend fun updateLastname(lastname: String, email: String)
 
     @Query("UPDATE users SET age = :age WHERE email = :email")
-    suspend fun updateAge(email: String, age: Int)
+    suspend fun updateAge(age: Int, email: String)
 
     @Query("UPDATE users SET phoneNumber = :phoneNumber WHERE email = :email")
-    suspend fun updatePhoneNumber(email: String, phoneNumber: String)
+    suspend fun updatePhoneNumber(phoneNumber: String, email: String)
 }

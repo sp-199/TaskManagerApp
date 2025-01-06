@@ -6,6 +6,11 @@ class UserRepository(private val userDAO: UserDAO) {
     suspend fun insertUser(user: User) {
         userDAO.insertUser(user)
     }
+
+    suspend fun updateUser(user:User){
+        userDAO.updateUser(user)
+    }
+
     suspend fun deleteUser(user: User) {
         userDAO.deleteUser(user)
     }
@@ -34,20 +39,20 @@ class UserRepository(private val userDAO: UserDAO) {
         return userDAO.getPhoneNumber(email)
     }
 
-    suspend fun updateName(email: String, name: String) {
-        userDAO.updateName(email, name)
+    suspend fun updateName(name: String, email: String) {
+        userDAO.updateName(name, email)
     }
 
-    suspend fun updateLastname(email: String, lastname: String) {
-        userDAO.updateLastname(email, lastname)
+    suspend fun updateLastname(lastname: String, email: String) {
+        userDAO.updateLastname(lastname, email)
     }
 
-    suspend fun updateAge(email: String, age: Int) {
-        userDAO.updateAge(email, age)
+    suspend fun updateAge(age: Int, email: String) {
+        userDAO.updateAge(age, email)
     }
 
-    suspend fun updatePhoneNumber(email: String, phoneNumber: String) {
-        userDAO.updatePhoneNumber(email, phoneNumber)
+    suspend fun updatePhoneNumber(phoneNumber: String, email:String) {
+        userDAO.updatePhoneNumber(phoneNumber, email)
     }
 
 

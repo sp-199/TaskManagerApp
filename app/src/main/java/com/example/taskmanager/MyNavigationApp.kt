@@ -39,7 +39,7 @@ fun MyNavigationApp(userViewModel: UserViewModel, taskViewModel: TaskViewModel) 
             arguments = listOf(navArgument("email") { type = NavType.StringType })
         ) { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email") ?: ""
-            EditProfileScreen(navController, userViewModel, email)
+            EditProfileScreen(navController, userViewModel)
         }
     }
 }

@@ -29,11 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.taskmanager.R
-import com.example.taskmanager.UserViewModel
 
 @Composable
-//fun ProfileScreen(){
 fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel, taskViewModel: TaskViewModel){
     val email = userViewModel.signedInEmail.collectAsState().value
     var name by remember{ mutableStateOf("") }
@@ -133,7 +130,7 @@ fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel
             color = Color.DarkGray
         )
         Button(
-            onClick = {},
+            onClick = {navController.navigate("editProfile/{email}")},
             modifier = Modifier.padding(start = 25.dp),
             colors = ButtonColors(Color.DarkGray, Color.White, Color.DarkGray, Color.White),
         ){

@@ -48,6 +48,12 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         }
     }
 
+    fun updateUser(user: User){
+        viewModelScope.launch {
+            repository.updateUser(user)
+        }
+    }
+
     fun getPassword(email: String, onResult: (String?) -> Unit) {
         viewModelScope.launch {
             val password = repository.getPassword(email)
@@ -71,27 +77,27 @@ class UserViewModel(private val repository: UserRepository) : ViewModel() {
         return repository.getPhoneNumber(email)
     }
 
-    fun updateName(email: String, name: String) {
+    fun updateName(name: String, email: String) {
         viewModelScope.launch {
-            repository.updateName(email, name)
+            repository.updateName(name, email)
         }
     }
 
-    fun updateLastname(email: String, lastname: String) {
+    fun updateLastname(lastname: String, email: String) {
         viewModelScope.launch {
-            repository.updateLastname(email, lastname)
+            repository.updateLastname(lastname, email)
         }
     }
 
-    fun updateAge(email: String, age: Int) {
+    fun updateAge(age: Int, email: String) {
         viewModelScope.launch {
-            repository.updateAge(email, age)
+            repository.updateAge(age, email)
         }
     }
 
-    fun updatePhoneNumber(email: String, phoneNumber: String) {
+    fun updatePhoneNumber(phoneNumber: String, email: String) {
         viewModelScope.launch {
-            repository.updatePhoneNumber(email, phoneNumber)
+            repository.updatePhoneNumber(phoneNumber, email)
         }
     }
 

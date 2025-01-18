@@ -1,14 +1,18 @@
 package com.example.taskmanager
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -45,13 +49,11 @@ fun EditProfileScreen(navController: NavHostController, userViewModel: UserViewM
             .fillMaxSize()
             .background(Color.White)
             .padding(20.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
             onClick = {navController.navigate("profile/{email}")},
             modifier = Modifier
-                .padding(top = 30.dp)
-                .padding(start = 5.dp),
+                .padding(top = 40.dp,start = 5.dp, bottom =100.dp),
             colors = ButtonColors(Color.DarkGray, Color.White, Color.DarkGray, Color.White)
         ) {
             Text("Back")
@@ -59,36 +61,81 @@ fun EditProfileScreen(navController: NavHostController, userViewModel: UserViewM
         Text(
             text = "Edit Profile",
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier
+                .padding(bottom = 25.dp)
+                .align(Alignment.CenterHorizontally),
+            color = Color(0xFF006C62)
         )
 
-        OutlinedTextField(
+        TextField(
             value = name,
             onValueChange = { name = it },
             label = { Text(text = "First Name") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(1.dp, Color(0xFF018F83)),
+            colors = TextFieldDefaults.colors(
+                unfocusedLabelColor = Color.DarkGray,
+                focusedLabelColor = Color.DarkGray,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
 
-        OutlinedTextField(
+        TextField(
             value = lastname,
             onValueChange = { lastname = it },
             label = { Text("Last Name") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(1.dp, Color(0xFF018F83)),
+            colors = TextFieldDefaults.colors(
+                unfocusedLabelColor = Color.DarkGray,
+                focusedLabelColor = Color.DarkGray,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
 
-        OutlinedTextField(
+        TextField(
             value = age,
             onValueChange = { age = it },
             label = { Text("Age") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(1.dp, Color(0xFF018F83)),
+            colors = TextFieldDefaults.colors(
+                unfocusedLabelColor = Color.DarkGray,
+                focusedLabelColor = Color.DarkGray,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+
+            )
         )
 
-        OutlinedTextField(
+        TextField(
             value = phoneNumber,
             onValueChange = { phoneNumber = it },
             label = { Text("Phone Number") },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp)
+                .align(Alignment.CenterHorizontally)
+                .border(1.dp, Color(0xFF018F83)),
+            colors = TextFieldDefaults.colors(
+                unfocusedLabelColor = Color.DarkGray,
+                focusedLabelColor = Color.DarkGray,
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+
+            )
         )
 
         Button(
@@ -100,9 +147,14 @@ fun EditProfileScreen(navController: NavHostController, userViewModel: UserViewM
                 email?.let { userViewModel.updateName(name, it) }
                 navController.navigate("profile/{email}")
             },
-            modifier = Modifier.padding(top = 16.dp)
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .align(Alignment.CenterHorizontally),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF006C62)
+            )
         ) {
-            Text("Save Changes")
+            Text("Save Changes", fontWeight = FontWeight.Bold)
         }
 
         if (isSaved) {

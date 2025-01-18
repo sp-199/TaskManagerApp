@@ -86,7 +86,7 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Blue)
+                .background(Color(0xFFe74c3c))
 //                .background(Color(0xFF9DD9F3))
                 .align(Alignment.CenterHorizontally),
             contentAlignment = Alignment.Center,
@@ -122,7 +122,7 @@ fun DashboardScreen(navController: NavHostController, userViewModel: UserViewMod
                     .fillMaxHeight()
                     .width(185.dp)
                     .shadow(elevation = 5.dp, shape = RoundedCornerShape(40.dp))
-                    .border(width = 2.dp, shape = RoundedCornerShape(40.dp), color = Color.Cyan)
+                    .border(width = 2.dp, shape = RoundedCornerShape(40.dp), color = Color(0xFF018F83))
 
             ) {
                 Column(

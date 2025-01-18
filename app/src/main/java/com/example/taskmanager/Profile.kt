@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -56,11 +58,19 @@ fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel
     Button(
         onClick = {navController.navigate("dashboard")},
         modifier = Modifier
-            .padding(top = 30.dp)
+            .padding(top = 40.dp)
             .padding(start = 5.dp),
         colors = ButtonColors(Color.DarkGray, Color.White, Color.DarkGray, Color.White)
     ) {
-        Text("Back")
+        Text("Back", fontWeight = FontWeight.Bold)
+    }
+    Button(
+        onClick = {navController.navigate("editProfile/{email}")},
+        modifier = Modifier
+            .padding(top = 40.dp,start = 290.dp),
+        colors = ButtonColors(Color.DarkGray, Color.White, Color.DarkGray, Color.White),
+    ){
+        Text("Edit Profile", fontWeight = FontWeight.Bold)
     }
     Image(
         painter = painterResource(R.drawable.baseline_arrow_drop_down_circle_24),
@@ -95,59 +105,67 @@ fun ProfileScreen(navController: NavHostController, userViewModel: UserViewModel
         )
         Text(
             text = "$name $lastname",
-            //text = "John Doe",
             modifier = Modifier.align(Alignment.CenterHorizontally).padding(bottom = 20.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
         Text(
             text = "Name: $name",
-            //text = "Name: John",
             fontSize = 18.sp,
             fontStyle = FontStyle.Italic,
             color = Color.DarkGray
         )
         Text(
             text = "Lastname: $lastname",
-//            text = "Lastname: Doe",
             fontSize = 18.sp,
             fontStyle = FontStyle.Italic,
             color = Color.DarkGray
         )
         Text(
             text = "Age: $age",
-            //text = "Age: 19",
             fontSize = 18.sp,
             fontStyle = FontStyle.Italic,
             color = Color.DarkGray
         )
         Text(
             text = "Phone: $phoneNumber",
-            //text = "Phone Number: 596577555",
             modifier = Modifier.padding(bottom = 20.dp),
             fontSize = 18.sp,
             fontStyle = FontStyle.Italic,
             color = Color.DarkGray
         )
-        Button(
-            onClick = {navController.navigate("editProfile/{email}")},
-            modifier = Modifier.padding(start = 25.dp),
-            colors = ButtonColors(Color.DarkGray, Color.White, Color.DarkGray, Color.White),
-        ){
-            Text("Edit Profile", fontWeight = FontWeight.Bold)
-        }
-
-        Button(
-            onClick = {
-                email?.let { userViewModel.deleteUserByEmail(it) }
-                email?.let{taskViewModel.deleteALLTasks(it)}
-                navController.navigate("login")
+    }
+    val showDialog = remember { mutableStateOf(false) }
+    Button(
+        onClick = {
+            showDialog.value = true
+        },
+        modifier = Modifier
+            .padding(top = 850.dp, start = 135.dp),
+        colors = ButtonColors(Color(0xFFe74c3c), Color.White, Color(0xFFe74c3c), Color.White),
+    ){
+        Text("Delete Account", fontWeight = FontWeight.ExtraBold)
+    }
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text("Delete Account") },
+            text = { Text("Are you sure you want to delete your account? This action cannot be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    email?.let { userViewModel.deleteUserByEmail(it) }
+                    email?.let{taskViewModel.deleteALLTasks(it)}
+                    navController.navigate("login")
+                    showDialog.value = false
+                }) {
+                    Text("Yes")
+                }
             },
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally),
-            colors = ButtonColors(Color(0xFFe74c3c), Color.White, Color(0xFFe74c3c), Color.White),
-        ){
-            Text("Delete Account", fontWeight = FontWeight.Bold)
-        }
+            dismissButton = {
+                TextButton(onClick = { showDialog.value = false }) {
+                    Text("No")
+                }
+            }
+        )
     }
 }

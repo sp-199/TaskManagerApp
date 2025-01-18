@@ -1,19 +1,26 @@
 package com.example.taskmanager
 
 import android.util.Log
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,7 +29,14 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.ColorMatrix
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -33,78 +47,136 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(40.dp),
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            "Welcome to Your Task Manager!",
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+        Image(
+            painter = painterResource(id = R.drawable.welcome_background), // Replace with your image resource
+            contentDescription = "background1",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize(),
+            colorFilter = ColorFilter.colorMatrix(ColorMatrix().apply {
+                setToScale(1.1f, 1.1f, 1.2f, 1f) // Adjust brightness (values > 1 increase brightness, < 1 decrease)
+            })
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        var email by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
-        var result by remember { mutableStateOf("") }
-        TextField(
-            value = email,
-            onValueChange = { email = it },
-            placeholder = { Text("Enter Your Email") },
-            label = { Text("Email") },
+        Column(
             modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 16.dp)
-                .fillMaxWidth()
-        )
-        userViewModel.setSignedInEmail(email)
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            placeholder = { Text("Enter Your Password") },
-            label = { Text("Password") },
-            visualTransformation = PasswordVisualTransformation(),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .padding(bottom = 16.dp)
-                .fillMaxWidth()
-        )
-        Button(
-            onClick = {
-                try {
-                    userViewModel.getPassword(email.lowercase()) { pass ->
-                        if (pass != null && password == pass) {
-                            result = "Log in successful!"
-                            navController.navigate("dashboard")
-                        } else {
-                            result = "Incorrect email or password."
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("LoginScreen", "Error during login", e)
-                    result = "An unexpected error occurred."
-                }
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+                .fillMaxSize()
+                .padding(40.dp),
         ) {
-            Text("Log in")
-        }
-        if (result.isNotEmpty()) {
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = result,
-                color = if (result == "Log in successful!") MaterialTheme.colorScheme.primary
-                else MaterialTheme.colorScheme.error,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+            Spacer(
+                modifier = Modifier.height(125.dp)
             )
-        }
-        TextButton(
-            onClick = { navController.navigate("signup") },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("Don't have an account? Create one")
+            Image(
+                painter = painterResource(id = R.drawable.task_manager_app_icon),
+                contentDescription = "Description of the image",
+                modifier = Modifier
+                    .size(150.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(5.dp)
+            )
+
+            Spacer(
+                modifier = Modifier.height(32.dp)
+            )
+            Text(
+                "Welcome to Your Task Manager!",
+                fontWeight = FontWeight.Bold,
+                fontSize = 22.sp,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 10.dp),
+                color = Color(0xFFFF4040)
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            var email by remember { mutableStateOf("") }
+            var password by remember { mutableStateOf("") }
+            var result by remember { mutableStateOf("") }
+            var emailColor by remember { mutableStateOf(Color.Black) }
+            TextField(
+                value = email,
+                onValueChange = { email = it },
+                placeholder = { Text("Enter Your Email") },
+                label = { Text("Email") },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+                    .border(width = 2.dp, color = Color(0xFFEA6F5C)),
+                colors = TextFieldDefaults.colors(
+                    unfocusedTextColor = emailColor,
+                    disabledTextColor = emailColor,
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedLabelColor = Color(0xFFEA6F5C),
+                    focusedLabelColor = Color(0xFFEA6F5C),
+                    focusedPlaceholderColor = Color.LightGray,
+                    unfocusedPlaceholderColor = Color.LightGray
+                )
+            )
+            userViewModel.setSignedInEmail(email)
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                placeholder = { Text("Enter Your Password") },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 16.dp)
+                    .fillMaxWidth()
+                    .border(width = 2.dp, color = Color(0xFFEA6F5C)),
+                colors = TextFieldDefaults.colors(
+                    unfocusedContainerColor = Color.White,
+                    focusedContainerColor = Color.White,
+                    unfocusedLabelColor = Color(0xFFEA6F5C),
+                    focusedLabelColor = Color(0xFFEA6F5C),
+                    focusedPlaceholderColor = Color.LightGray,
+                    unfocusedPlaceholderColor = Color.LightGray
+                ),
+            )
+            Spacer(modifier = Modifier.height(38.dp))
+            Button(
+                onClick = {
+                    try {
+                        userViewModel.getPassword(email.lowercase()) { pass ->
+                            if (pass != null && password == pass) {
+                                result = "Log in successful!"
+                                navController.navigate("dashboard")
+                            } else {
+                                result = "Incorrect email or password."
+                                emailColor = Color.Red
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("LoginScreen", "Error during login", e)
+                        result = "An unexpected error occurred."
+                    }
+                },
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(height = 45.dp, width = 100.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF36A99D)
+                )
+            ) {
+                Text("Log in", style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold))
+            }
+            if (result.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = result,
+                    color = if (result == "Log in successful!") MaterialTheme.colorScheme.primary
+                    else MaterialTheme.colorScheme.error,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+            TextButton(
+                onClick = { navController.navigate("signup") },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+            ) {
+                Text("Don't have an account? Create one", style = TextStyle(color = Color.Blue))
+            }
         }
     }
 }

@@ -48,7 +48,7 @@ fun EditProfileScreen(navController: NavHostController, userViewModel: UserViewM
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
-            onClick = {navController.navigate("dashboard")},
+            onClick = {navController.navigate("profile/{email}")},
             modifier = Modifier
                 .padding(top = 30.dp)
                 .padding(start = 5.dp),

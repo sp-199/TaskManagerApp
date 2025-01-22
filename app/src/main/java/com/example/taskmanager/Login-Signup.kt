@@ -2,6 +2,7 @@ package com.example.taskmanager
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -184,16 +185,14 @@ fun LoginScreen(navController: NavHostController, userViewModel: UserViewModel) 
 @Composable
 fun SignupScreen(navController: NavHostController, userViewModel: UserViewModel) {
     Column(
-        verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxSize()
-            .padding(40.dp),
+            .padding(16.dp),
     ) {
         Button(
             onClick = {navController.navigate("login")},
             modifier = Modifier
-                .padding(top = 30.dp)
-                .padding(start = 5.dp),
+                .padding(top = 40.dp,start = 5.dp, bottom = 40.dp),
             colors = ButtonColors(Color.DarkGray, Color.White, Color.DarkGray, Color.White)
         ) {
             Text("Back")
@@ -201,8 +200,11 @@ fun SignupScreen(navController: NavHostController, userViewModel: UserViewModel)
         Text(
             "Create Your Account",
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            fontSize = 25.sp,
+            modifier = Modifier
+                .padding(bottom = 20.dp)
+                .align(Alignment.CenterHorizontally),
+            color = Color(0xFF00468C)
         )
         var firstName by remember { mutableStateOf("") }
         var lastName by remember { mutableStateOf("") }
@@ -218,67 +220,109 @@ fun SignupScreen(navController: NavHostController, userViewModel: UserViewModel)
         TextField(
             value = firstName,
             onValueChange = { firstName = it },
-            placeholder = { Text("Enter Your First Name") },
-            label = { Text("First Name") },
+            placeholder = { Text("Enter Your First Name", color = Color.LightGray) },
+            label = { Text("First Name", color = Color.DarkGray) },
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         TextField(
             value = lastName,
             onValueChange = { lastName = it },
-            placeholder = { Text("Enter Your Last Name") },
-            label = { Text("Last Name") },
+            placeholder = { Text("Enter Your Last Name", color = Color.LightGray) },
+            label = { Text("Last Name", color = Color.DarkGray) },
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         TextField(
             value = age,
             onValueChange = { age = it },
-            placeholder = { Text("Enter Your Age") },
-            label = { Text("Age") },
+            placeholder = { Text("Enter Your Age", color = Color.LightGray) },
+            label = { Text("Age", color = Color.DarkGray) },
             modifier = Modifier
                 .padding(bottom = 16.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         TextField(
             value = phoneNumber,
             onValueChange = { phoneNumber = it },
-            placeholder = { Text("Enter Your Phone Number") },
-            label = { Text("Phone Number") },
+            placeholder = { Text("Enter Your Phone Number", color = Color.LightGray) },
+            label = { Text("Phone Number", color = Color.DarkGray) },
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         TextField(
             value = email,
             onValueChange = { email = it },
-            placeholder = { Text("Enter Your Email") },
-            label = { Text("Email") },
+            placeholder = { Text("Enter Your Email", color = Color.LightGray) },
+            label = { Text("Email", color = Color.DarkGray) },
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         TextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = { Text("Enter Your Password") },
-            label = { Text("Password") },
+            placeholder = { Text("Enter Your Password", color = Color.LightGray) },
+            label = { Text("Password", color = Color.DarkGray) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         TextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it },
-            placeholder = { Text("Confirm Your Password") },
-            label = { Text("Confirm Password") },
+            placeholder = { Text("Confirm Your Password", color = Color.LightGray) },
+            label = { Text("Confirm Password", color = Color.DarkGray) },
             visualTransformation = PasswordVisualTransformation(),
             modifier = Modifier
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
+                .border(1.dp, Color(0xFF2196F3))
+                .background(Color.White),
+            colors = TextFieldDefaults.colors(
+                unfocusedContainerColor = Color.White,
+                focusedContainerColor = Color.White
+            )
         )
         if (errorMessage.isNotEmpty()) {
             Text(
@@ -296,16 +340,22 @@ fun SignupScreen(navController: NavHostController, userViewModel: UserViewModel)
                         val user = User( email.lowercase(), firstName, lastName, age.toInt(), phoneNumber, password)
                         userViewModel.insertUser(user)
                         result = "User saved successfully"
+                        navController.navigate("login")
                     }
                     navController.navigate("login")
                 } else {
                     errorMessage = "Passwords do not match."
                 }
-                navController.navigate("login")
             },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .size(height = 65.dp, width = 110.dp)
+                .padding(top = 15.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF00468C)
+            )
         ) {
-            Text("Sign up")
+            Text("Sign up", style = TextStyle(fontSize = 17.sp, fontWeight = FontWeight.Bold))
         }
     }
 }

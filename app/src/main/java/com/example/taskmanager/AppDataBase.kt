@@ -7,6 +7,7 @@ import com.example.taskmanager.User
 import com.example.taskmanager.UserDAO
 
 @Database(entities = [User::class, Task::class], version = 3)
+@TypeConverters(Converters::class)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDAO(): UserDAO
     abstract fun taskDAO(): TaskDAO

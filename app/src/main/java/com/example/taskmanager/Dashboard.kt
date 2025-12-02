@@ -331,8 +331,9 @@ fun TaskList(tasks: List<Task>, taskViewModel: TaskViewModel, userViewModel: Use
                         },
                         modifier = Modifier.weight(0.1f)
                     )
+
                     Text(
-                        text = task.dueDate ?: "No due date",
+                        text = task.dueDate.toString(),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(0.1f),
                     )
